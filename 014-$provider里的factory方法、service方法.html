@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div ng-controller="melonController">
+    {{name}}
+</div>
+</body>
+<script src="angular-1.3.0.js"></script>
+<script>
+    var myApp = angular.module('myApp', [], function ($provide) {
+//        console.log(1);
+        //自定义服务
+        $provide.provider('CustomService', function () {
+            this.$get = function () {
+                return {
+                    message: 'CustomService Message'
+                }
+            }
+        });
+        $provide.provider('CustomService2', function () {
+            this.$get = function () {
+                return {
+                    message: 'CustomService2 Message'
+                }
+            }
+        });
+        $provide.factory('CustomFactory', function () {
+            //可返回任何类型，直接return版的provider
+            return "Melon"
+        });
+        $provide.service('CustomService222', function () {
+            //返回的必须是对象类型
+            return ['melon', 'su']
+        });
+    });
+    myApp.controller('melonController', function ($scope, CustomService, CustomService2, CustomFactory, CustomService222) {
+        $scope.name = '瓜儿';
+//        console.log(2);
+//        console.log(CustomService2);
+        console.log(CustomFactory);
+        console.log(CustomService222);
+    });
+</script>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<style>
+    section{
+        background: #f5f5f5;
+        padding: 20px;}
+</style>
+<body>
+<div ng-controller="firstController">
+    <h1>数字</h1>
+    <section>
+        <!--123,456,789-->
+        <p>{{ 123456789 | number }}</p>
+        <!--123,456,789.000-->
+        <p>{{ 123456789 | number:3 }}</p>
+        <!--$123,456,789.00-->
+        <p>{{ 123456789 | currency }}</p>
+        <!--￥123,456,789.00-->
+        <p>{{ 123456789 | currency : '￥'}}</p>
+    </section>
+    <h1>日期</h1>
+    <section>
+        <p>
+            <strong>default</strong> :{{ today }}
+        </p>
+        <p>
+            <strong>medium</strong> :{{ today | date:'medium'}}
+        </p>
+        <p>
+            <strong>short</strong> :{{ today | date:'short'}}
+        </p>
+        <p>
+            <strong>fullDate</strong> :{{ today | date:'fullDate'}}
+        </p>
+        <p>
+            <strong>longDate</strong> :{{ today | date:'longDate'}}
+        </p>
+        <p>
+            <strong>mediumDate</strong> :{{ today | date:'mediumDate'}}
+        </p>
+        <p>
+            <strong>mediumTime</strong> :{{ today | date:'mediumTime'}}
+        </p>
+        <p>
+            <strong>shortTime</strong> :{{ today | date:'shortTime'}}
+        </p>
+        <h2>时间</h2>
+        <p>
+            <strong>年</strong>
+            {{ today | date:'y'}}
+            {{ today | date:'yy'}}
+            {{ today | date:'yyyy'}}
+        </p>
+        <p>
+            <strong>月</strong>
+            {{ today | date:'M'}}
+            {{ today | date:'MM'}}
+            {{ today | date:'MMM'}}
+            {{ today | date:'MMMM'}}
+        </p>
+        <p>
+            <strong>日</strong>
+            {{ today | date:'d'}}
+            {{ today | date:'dd'}}
+            {{ today | date:'EEE'}}
+            {{ today | date:'EEEE'}}
+        </p>
+        <p>
+            <strong>时</strong>
+            <em>二十四小时</em>：{{ today | date:'H'}}
+            {{ today | date:'HH'}}
+            <em>十二小时</em>：{{ today | date:'h'}}
+            {{ today | date:'hh'}}
+        </p>
+        <p>
+            <strong>分</strong>
+            {{ today | date:'m'}}
+            {{ today | date:'mm'}}
+        </p>
+        <p>
+            <strong>秒</strong>
+            {{ today | date:'s'}}
+            {{ today | date:'ss'}}
+            <em>毫秒</em>
+            {{ today | date:'sss'}}
+            {{ today | date:'ss.sss'}}
+        </p>
+        <h2>自定义</h2>
+        {{ today | date:'yyyy-MM-dd  HH:mm:ss' }}
+    </section>
+</div>
+</body>
+<script src="angular-1.3.0.js"></script>
+<script>
+angular.module('myApp',[])
+        .factory('Data', function () {
+            //this.$get = function(){}
+            return{
+                message : '共享数据'
+            };
+        })
+        .controller('firstController',function($scope){    //Data自动注入
+            console.log($scope);
+            $scope.today = new Date();
+        });
+</script>
+</html>

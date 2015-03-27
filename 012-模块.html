@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html ng-app>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css"/>
+</head>
+<body>
+    <div class="container" ng-controller="cartController">
+        <table class="table" ng-show="cart.length">
+            <thead>
+                <tr>
+                    <th>产品编号</th>
+                    <th>产品名字</th>
+                    <th>购买数量</th>
+                    <th>产品单价</th>
+                    <th>产品总价</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in cart">
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>
+                        <a class="btn btn-primary" href="javascript:;" ng-click="redu(item.id)">-</a>
+                        <input type="text" value="{{item.quantity}}" ng-model="item.quantity"/>
+                        <a class="btn btn-primary" href="javascript:;" ng-click="add(item.id)">+</a>
+                    </td>
+                    <td>{{item.price}}</td>
+                    <td>{{item.price * item.quantity}}</td>
+                    <td>
+                        <button type="button" class="btn btn-danger" ng-click="remove(item.id)">删除</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>总价格</td>
+                    <td>{{totalPrice()}}</td>
+                    <td>总购买数量</td>
+                    <td>{{totalCount()}}</td>
+                    <td>
+                        <button type="button" class="btn btn-danger" ng-click="cart = {}">清空购物车</button>
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="alert alert-warning"  ng-show="!cart.length">购物车为空</div>
+    </div>
+</body>
+<script>
+    var cartController = function ($scope) {
+        /*
+         * 虚拟数据
+         */
+        $scope.cart = [
+            {
+                id:1000,
+                name:'iphone5s',
+                quantity:3,
+                price:4300
+            },
+            {
+                id:1001,
+                name:'iphone6',
+                quantity:4,
+                price:5300
+            },
+            {
+                id:1002,
+                name:'ipad',
+                quantity:2,
+                price:2300
+            },
+            {
+                id:1003,
+                name:'ipod',
+                quantity:8,
+                price:1500
+            }
+        ]
+        /*
+         * 计算总价格
+         */
+        $scope.totalPrice = function () {
+            var total = 0;
+            angular.forEach($scope.cart,function(item){
+                total += item.price * item.quantity;
+            });
+            return total;
+        }
+        /*
+         * 计算总购买数
+         */
+        $scope.totalCount = function () {
+            var total = 0;
+            angular.forEach($scope.cart, function (item) {
+                total += parseInt(item.quantity);
+            })
+            return total;
+        }
+
+        /*
+         * 查找当前元素索引
+         */
+        var findIndex = function(id){
+            var _index = -1;    //防止找不到
+
+            angular.forEach($scope.cart,function(item,key){
+//                console.log(key)
+
+                // 标记当前点击的索引
+                if(item.id === id) {
+                    _index = key;
+                    return ; //这里的return
+                }
+            })
+//            console.log(_index)
+            return _index;
+        }
+
+
+        /*
+         * 删除当前商品
+         */
+        $scope.remove = function (id) {
+
+            var _index = findIndex(id);
+
+            if( _index !== -1 ){
+//                console.log(_index)
+                $scope.cart.splice(_index,1);    //删除当前索引 1位
+            }
+        }
+        /*
+        * 添加商品数量
+        * */
+        $scope.add = function (id) {
+            var _index = findIndex(id);
+            if( _index !== -1 ){
+                ++ $scope.cart[_index].quantity;
+            }
+        }
+        /*
+        * 减少商品数量
+        * */
+        $scope.redu = function (id) {
+            var _index = findIndex(id);
+            if(_index !== -1){
+                var item = $scope.cart[_index];
+                if(item.quantity > 0){
+                    //如果数量减少到1，提示确认删除
+                    -- item.quantity;
+                }
+//                else{
+//
+//                    confirm("是否删除该商品？") &&  $scope.remove(id);
+//                }
+            }
+        };
+        $scope.$watch('cart',function(newValue,oldValue){   //$watch 方法监听整个cart对象，需要第三个参数true
+//            console.log(newValue);      //这是整个cart
+
+            angular.forEach(newValue, function (item, key) {    //循环这个对象，item
+                if(item.quantity < 1){  //如果item的数量小于1，提示删除
+                    var returnKey = confirm("是否删除该商品？")
+                    if(returnKey){
+                        $scope.remove(item.id);
+                    }else{
+                        item.quantity = oldValue[key].quantity;
+                    }
+                }
+            })
+        },true);
+     };
+</script>
+<script src="angular-1.3.0.js"></script>
+<!--<script src="js/cart.js"></script>-->
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div ng-controller="firstController">
+    <input type="text" ng-model="data.name"/>
+    <input type="text" ng-model="Data.message"/>
+    <p>
+        first-name:{{data.name}}<br>
+        first-message:{{Data.message}}
+    </p>
+</div>
+<div ng-controller="secondController">
+    <p>
+    <p>
+        second-name:{{data.name}}<br>
+        second-message:{{Data.message}}
+    </p>
+    </p>
+</div>
+</body>
+<script src="angular-1.3.0.js"></script>
+<script>
+angular.module('myApp',[])
+        .factory('Data', function () {
+            //this.$get = function(){}
+            return{
+                message : '共享数据'
+            };
+        })
+        .controller('firstController',function($scope,Data){    //Data自动注入
+            console.log($scope);
+            $scope.data = {
+                name : '兄弟间'
+            }
+            $scope.Data = Data;
+        })
+        .controller('secondController',function($scope,Data){        //Data自动注入
+            console.log($scope);
+            //共享data数据，data指针对应上一个控制器的指针，达到数据共享
+            $scope.data = $scope.$$prevSibling.data;
+            $scope.Data = Data;
+        });
+</script>
+</html>

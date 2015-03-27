@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<style>
+    section{
+        background: #f5f5f5;
+        padding: 20px;}
+</style>
+<body>
+<div ng-controller="firstController">
+    {{ data }}
+    <ul>
+        <li ng-repeat=" user in data | filterAge ">
+            {{ user.name }}
+            {{ user.age }}
+            {{ user.city }}
+        </li>
+    </ul>
+</div>
+</body>
+<script src="angular-1.3.0.js"></script>
+<script>
+angular.module('myApp',[],function($filterProvider,$provide,$controllerProvider){
+    // 过滤器写法1   $filterProvider
+    $filterProvider.register('filterAge', function () {
+        return function(obj){
+//            console.log(obj)
+//            return obj;
+            var newObj = [];    //
+            angular.forEach( obj ,function(o){
+               if( o.age > 20 ){
+                   newObj.push(o);
+               }
+            });
+            return newObj;
+        }
+    });
+    // service另一种写法，通过$provide
+    $provide.service('Data', function () {
+        return [
+            {
+                name : '张三',
+                age : '25',
+                city : '广州'
+            },
+            {
+                name : '李四',
+                age : '20',
+                city : '北京'
+            }
+        ]
+    });
+    // 通过注册 firstController
+    $controllerProvider.register('firstController',function($scope,Data){
+        $scope.data = Data;
+    });
+})
+//.controller('firstController',function($scope,Data){
+//    $scope.data = Data;
+//})
+    // 过滤器模块的快捷方法 module.filter
+        .filter('filterCity', function () {
+            return function(obj){
+                var newObj = [];    //
+                angular.forEach( obj ,function(o){
+                    if( o.city === '北京' ){
+                        newObj.push(o);
+                    }
+                });
+                return newObj;
+            }
+        })
+
+</script>
+</html>
